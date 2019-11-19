@@ -253,7 +253,8 @@ ROOT_DIR=`pwd`
 spopd
 
 # get python installation
-python3Path=$(echo /Library/Frameworks/Python.framework/Versions/3.*/bin | awk '{print $1;}')
+# python3Path=$(echo /Library/Frameworks/Python.framework/Versions/3.*/bin | awk '{print $1;}')
+python3Path="/Users/runner/hostedtoolcache/Python/3.8.0/x64/bin"
 if [ ! -d "$python3Path" ]; then
     python3Path=""
 fi
