@@ -271,7 +271,7 @@ echo `pwd`
 
 if [ "$NONETWORK" != "yes" ]; then
     if ! [ -e vlc ]; then
-        git clone https://git.videolan.org/git/vlc/vlc-3.0.git vlc
+        git clone https://github.com/videolan/vlc-3.0.git vlc
         info "Applying patches to vlc.git"
         cd vlc
         git checkout -B localBranch ${TESTEDHASH}
