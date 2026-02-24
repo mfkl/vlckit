@@ -18,7 +18,7 @@ jobs:
             runner: macos-14
             artifact-name: VLCKit-macos-arm64
           - arch: x86_64
-            runner: macos-13
+            runner: macos-14
             artifact-name: VLCKit-macos-x86_64
 
     name: Build macOS (${{ matrix.arch }})
