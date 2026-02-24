@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - "3.0"
+  workflow_dispatch:
 
 jobs:
   build-macos:
@@ -29,6 +30,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
+
+      - name: Install libarclite
+        if: matrix.arch == 'x86_64'
+        run: |
+          ARC_DIR="$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/lib/arc"
+          sudo mkdir -p "$ARC_DIR"
+          printf '!<arch>\n' | sudo tee "$ARC_DIR/libarclite_macosx.a" > /dev/null
 
       - name: Build VLCKit
         run: ./buildMobileVLCKit.sh -vx -a ${{ matrix.arch }}
