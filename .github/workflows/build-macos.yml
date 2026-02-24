@@ -1,0 +1,51 @@
+name: Build VLCKit macOS
+
+on:
+  push:
+    branches:
+      - "3.0"
+  pull_request:
+    branches:
+      - "3.0"
+  workflow_dispatch:
+
+jobs:
+  build-macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: aarch64
+            runner: macos-14
+            artifact-name: VLCKit-macos-arm64
+          - arch: x86_64
+            runner: macos-14
+            artifact-name: VLCKit-macos-x86_64
+
+    name: Build macOS (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install libarclite
+        if: matrix.arch == 'x86_64'
+        run: |
+          ARC_DIR="$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/lib/arc"
+          sudo mkdir -p "$ARC_DIR"
+          printf '!<arch>\n' | sudo tee "$ARC_DIR/libarclite_macosx.a" > /dev/null
+
+      - name: Build VLCKit
+        run: ./buildMobileVLCKit.sh -vx -a ${{ matrix.arch }}
+
+      - name: Package
+        run: ./Packaging/create-distributable-package.sh -v
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact-name }}
+          path: VLCKit-*
